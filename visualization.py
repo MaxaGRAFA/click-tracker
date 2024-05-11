@@ -57,7 +57,7 @@ class VisualizationTool():
     # Shows the number of keystrokes
     def stats_of_keyboard(self) -> None:
         df = pd.DataFrame(self.load_file().items(), columns=['button', 'num_clicks'])
-        df = df.assign(num_clicks=df.num_clicks.astype(int)).sort_values('num_clicks', ascending=False)
+        df = df.assign(num_clicks=df.num_clicks.astype(int)).sort_values('num_clicks', ascending=False) # I convert it to 'int' to sort
 
         table = Table(title="\n[b]Your Keyboard Clicks Stats[/b]\n")
 
@@ -93,4 +93,12 @@ class VisualizationTool():
         melted_df = pd.melt(count_per_hour, id_vars='hours', value_vars=count_per_hour.columns[1:], var_name='button', value_name='count')
 
         fig = px.bar(melted_df, x='hours', y='count', color='button', text='count')
+        fig.show()
+
+    # Shows the top 50 keystrokes as a bar
+    def show_top_50_keys(self) -> None:
+        df = pd.DataFrame(self.load_file().items(), columns=['button', 'num_clicks']).sort_values(by='num_clicks', ascending=False)
+        df = df.assign(num_clicks=df.num_clicks.astype(int)).sort_values('num_clicks', ascending=False)[:50] # Top 50
+        
+        fig = px.bar(df, x='button',y='num_clicks')
         fig.show()
